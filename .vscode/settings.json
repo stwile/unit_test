@@ -1,0 +1,10 @@
+{
+  "path-autocomplete.pathMappings": {
+    "~": "${folder}/src",
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true,
+    "vitest.enable": true
+  },
+}
