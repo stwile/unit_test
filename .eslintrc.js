@@ -5,7 +5,6 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'plugin:react/recommended',
     'airbnb',
     'plugin:import/errors',
     'plugin:import/warnings',
@@ -14,7 +13,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
     'plugin:import/recommended',
-    'plugin:storybook/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -22,31 +20,21 @@ module.exports = {
       jsx: true,
     },
     ecmaVersion: 'latest',
-    project: './tsconfig.eslint.json',
+    project: './tsconfig.json',
     sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
-  plugins: [
-    'import',
-    'jsx-a11y',
-    'prefer-arrow',
-    'react',
-    'react-hooks',
-    '@typescript-eslint',
-    'storybook',
-  ],
+  plugins: ['import', 'jsx-a11y', 'prefer-arrow', '@typescript-eslint'],
   root: true,
   rules: {
+    'no-useless-constructor': 0,
     'import/no-extraneous-dependencies': [
       'error',
       {
-        devDependencies: ['**/*.stories.*', '**/.storybook/**/*.*'],
         peerDependencies: true,
       },
     ],
-    'react/require-default-props': 'off',
     'import/prefer-default-export': 0,
-    'react/no-array-index-key': 0,
     // 落ち着いたら消すこと
     'no-void': [
       'error',
@@ -70,13 +58,6 @@ module.exports = {
         classPropertiesAllowed: false,
       },
     ],
-    'react/function-component-definition': [
-      'error',
-      {
-        namedComponents: 'arrow-function',
-        unnamedComponents: 'arrow-function',
-      },
-    ],
     '@typescript-eslint/no-unused-vars': [
       'error',
       {
@@ -97,22 +78,6 @@ module.exports = {
         tsx: 'never',
       },
     ],
-    'react/jsx-filename-extension': [
-      'error',
-      {
-        extensions: ['.jsx', '.tsx'],
-      },
-    ],
-    'react/jsx-props-no-spreading': [
-      'error',
-      {
-        html: 'enforce',
-        custom: 'enforce',
-        explicitSpread: 'ignore',
-      },
-    ],
-    'react/react-in-jsx-scope': 'off',
-    'react/prop-types': 'off',
     'import/order': [
       'error',
       {

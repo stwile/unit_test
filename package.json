@@ -5,12 +5,9 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "lint": "eslint --ext .ts,.tsx,.js",
-    "lint:fix": "eslint --fix --ext .ts,.tsx,.js",
-    "lint:conflict": "eslint-config-prettier 'src/**/*.{js,jsx,ts,tsx}'",
+    "build": "tsc --noEmit",
+    "lint": "./node_modules/eslint/bin/eslint.js --ext 'src/**/*.{js,ts}'",
+    "lint:fix": "./node_modules/eslint/bin/eslint.js --fix 'src/**/*.{js,ts}'",
     "prepare": "simple-git-hooks > /dev/null",
     "test": "vitest",
     "test:dev": "vitest dev",
@@ -22,7 +19,7 @@
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
       "prettier --write --loglevel=error",
-      "yarn lint"
+      "npm run lint"
     ],
     "{public,src}/**/*.{html,gql,graphql,json}": [
       "prettier --write --loglevel=error"
@@ -42,6 +39,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",

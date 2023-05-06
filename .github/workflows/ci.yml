@@ -20,23 +20,23 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ steps.get-node-version.outputs.nodeVersion }}
-          cache: yarn
+          cache: npm
 
       - uses: actions/cache@v3
         id: node_modules_cache_id
         with:
           path: '**/node_modules'
-          key: ${{ hashFiles('**/yarn.lock') }}
+          key: ${{ hashFiles('**/package-lock.json') }}
       - run: echo '${{ toJSON(steps.node_modules_cache_id.outputs) }}'
       - if: ${{ steps.node_modules_cache_id.outputs.cache-hit != 'true' }}
-        run: yarn
-      - run: yarn list --depth=0
+        run: npm install
+      - run: npm list --depth=0
 
       - name: lint
-        run:  yarn lint
+        run:  npm run lint
 
       - name: test
-        run: yarn coverage
+        run: npm run coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
