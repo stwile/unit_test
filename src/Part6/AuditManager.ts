@@ -1,63 +1,61 @@
 import { basename, extname } from 'path';
 
-import type IFileSystem from './IFileSystem';
+import FileUpdate from './FileUpdate';
 
-type withIndexPath = {
+import type FileContent from './FileContent';
+
+type withIndexFile = {
   index: number;
-  path: string;
+  file: FileContent;
 };
 
 class AuditManager {
-  constructor(
-    private readonly maxEntriesPerFile: number,
-    private readonly directoryName: string,
-    private readonly fileSystem: IFileSystem,
-  ) {}
+  constructor(private readonly maxEntriesPerFile: number) {}
 
-  addRecord(visitorName: string, timeOfVisit: Date): void {
-    const filePaths: string[] = this.fileSystem.getFiles(this.directoryName);
-    const sortByIndex = (files: string[]): withIndexPath[] => {
-      const getIndex = (filePath: string): number => {
+  addRecord(
+    files: FileContent[],
+    visitorName: string,
+    timeOfVisit: Date,
+  ): FileUpdate {
+    const sortByIndex = (items: FileContent[]): withIndexFile[] => {
+      const getIndex = (item: FileContent): number => {
         // File name example: audit_1.txt
-        const fileName: string = basename(filePath, extname(filePath));
+        const fileName: string = basename(
+          item.fileName,
+          extname(item.fileName),
+        );
 
         return Number.parseInt(fileName.split('_')[1], 10);
       };
 
-      return files.map(
-        (path: string): withIndexPath => ({
-          index: getIndex(path),
-          path,
+      return items.map(
+        (file): withIndexFile => ({
+          index: getIndex(file),
+          file,
         }),
       );
     };
-    const sorted = sortByIndex(filePaths);
+    const sorted = sortByIndex(files);
 
     const newRecord = `${visitorName};${timeOfVisit.toISOString()}`;
 
     if (sorted.length === 0) {
-      const newFile = `${this.directoryName}audit_1.txt`;
-      this.fileSystem.writeAllText(newFile, newRecord);
-
-      return;
+      return new FileUpdate(`audit_1.txt`, newRecord);
     }
 
-    const { index: currentFileIndex, path: currentFilePath } =
+    const { index: currentFileIndex, file: currentFile } =
       sorted[sorted.length - 1];
 
-    const currentFileFullPath = `${this.directoryName}${currentFilePath}`;
-    const lines: string[] = this.fileSystem.readAllLines(currentFileFullPath);
-
-    if (lines.length < this.maxEntriesPerFile) {
-      const newLines = [...lines, newRecord];
+    if (currentFile.lines.length < this.maxEntriesPerFile) {
+      const newLines = [...currentFile.lines, newRecord];
       const newContent = newLines.map((line: string) => `${line}\r\n`).join('');
-      this.fileSystem.writeAllText(currentFileFullPath, newContent.toString());
-    } else {
-      const newIndex: number = currentFileIndex + 1;
-      const newName = `audit_${newIndex}.txt`;
-      const newFile = `${this.directoryName}${newName}`;
-      this.fileSystem.writeAllText(newFile, newRecord);
+
+      return new FileUpdate(currentFile.fileName, newContent);
     }
+    const newIndex: number = currentFileIndex + 1;
+    const newName = `audit_${newIndex}.txt`;
+
+    return new FileUpdate(newName, newRecord);
   }
 }
 
