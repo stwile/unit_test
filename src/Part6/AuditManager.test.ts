@@ -9,11 +9,16 @@ import {
 import { join } from 'path';
 
 import AuditManager from './AuditManager';
+import FileSystem from './FileSystem';
 
 describe('AuditManager', () => {
   const maxEntriesPerFile = 3;
   const directoryName = './test-data/';
-  const sut = new AuditManager(maxEntriesPerFile, directoryName);
+  const sut = new AuditManager(
+    maxEntriesPerFile,
+    directoryName,
+    new FileSystem(),
+  );
 
   beforeAll(() => {
     // 事前にディレクトリを作成

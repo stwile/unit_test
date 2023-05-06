@@ -1,5 +1,6 @@
-import { readdirSync, writeFileSync, readFileSync } from 'fs';
 import { basename, extname } from 'path';
+
+import type IFileSystem from './IFileSystem';
 
 type withIndexPath = {
   index: number;
@@ -10,10 +11,11 @@ class AuditManager {
   constructor(
     private readonly maxEntriesPerFile: number,
     private readonly directoryName: string,
+    private readonly fileSystem: IFileSystem,
   ) {}
 
   addRecord(visitorName: string, timeOfVisit: Date): void {
-    const filePaths: string[] = readdirSync(this.directoryName);
+    const filePaths: string[] = this.fileSystem.getFiles(this.directoryName);
     const sortByIndex = (files: string[]): withIndexPath[] => {
       const getIndex = (filePath: string): number => {
         // File name example: audit_1.txt
@@ -35,7 +37,7 @@ class AuditManager {
 
     if (sorted.length === 0) {
       const newFile = `${this.directoryName}audit_1.txt`;
-      writeFileSync(newFile, newRecord);
+      this.fileSystem.writeAllText(newFile, newRecord);
 
       return;
     }
@@ -44,19 +46,17 @@ class AuditManager {
       sorted[sorted.length - 1];
 
     const currentFileFullPath = `${this.directoryName}${currentFilePath}`;
-    const lines: string[] = readFileSync(currentFileFullPath)
-      .toString()
-      .split('\n');
+    const lines: string[] = this.fileSystem.readAllLines(currentFileFullPath);
 
     if (lines.length < this.maxEntriesPerFile) {
       const newLines = [...lines, newRecord];
       const newContent = newLines.map((line: string) => `${line}\r\n`).join('');
-      writeFileSync(currentFileFullPath, newContent.toString());
+      this.fileSystem.writeAllText(currentFileFullPath, newContent.toString());
     } else {
       const newIndex: number = currentFileIndex + 1;
       const newName = `audit_${newIndex}.txt`;
       const newFile = `${this.directoryName}${newName}`;
-      writeFileSync(newFile, newRecord);
+      this.fileSystem.writeAllText(newFile, newRecord);
     }
   }
 }

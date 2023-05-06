@@ -6,10 +6,12 @@ module.exports = {
   },
   extends: [
     'airbnb',
+    'eslint:recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
     'plugin:import/recommended',
@@ -27,6 +29,7 @@ module.exports = {
   plugins: ['import', 'jsx-a11y', 'prefer-arrow', '@typescript-eslint'],
   root: true,
   rules: {
+    'class-methods-use-this': 0,
     'no-useless-constructor': 0,
     'import/no-extraneous-dependencies': [
       'error',
