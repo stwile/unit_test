@@ -13,7 +13,7 @@
       ],
       "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
       "args": [
-        "run",
+        "run test",
         "${relativeFile}"
       ],
       "smartStep": true,
