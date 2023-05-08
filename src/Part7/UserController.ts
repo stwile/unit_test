@@ -31,3 +31,5 @@ class UserController {
     this.messageBus.sendEmailChangedMessage(userId, newEmail);
   }
 }
+
+export = UserController;
