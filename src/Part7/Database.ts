@@ -14,7 +14,7 @@ type CompanyEntity = {
 };
 
 class Database {
-  static getUserById = (id: number): UserEntity | null => {
+  getUserById = (id: number): UserEntity | null => {
     const data: UserEntity[] = [
       { id: 999999, mail: 'hoge@example.com', type: UserType.Employee },
     ];
@@ -27,16 +27,16 @@ class Database {
     return result;
   };
 
-  static getCompany = (): CompanyEntity => ({
+  getCompany = (): CompanyEntity => ({
     companyDomainName: 'example',
     numberOfEmployees: 3,
   });
 
-  static saveCompany = (newNumber: number): void => {
+  saveCompany = (newNumber: number): void => {
     console.log(newNumber);
   };
 
-  static saveUser = (user: User): void => {
+  saveUser = (user: User): void => {
     console.log(user);
   };
 }
