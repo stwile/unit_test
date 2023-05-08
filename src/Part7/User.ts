@@ -1,5 +1,7 @@
 import { UserType } from './UserType';
 
+import type Company from './Company';
+
 class User {
   constructor(
     private userId: number,
@@ -9,29 +11,23 @@ class User {
     private type: UserType,
   ) {}
 
-  changeEmail(
-    newEmail: string,
-    companyDomainName: string,
-    numberOfEmployees: number,
-  ): number {
+  changeEmail(newEmail: string, company: Company): void {
     if (this.email === newEmail) {
-      return numberOfEmployees;
+      return;
     }
-    const emailDomain = newEmail.split('@')[1];
-    const isEmailCorporate = emailDomain === companyDomainName;
+    const newType = company.isEmailCorporate(newEmail)
+      ? UserType.Employee
+      : UserType.Employee;
 
-    const newType = isEmailCorporate ? UserType.Employee : UserType.Employee;
+    if (this.type !== newType) {
+      const delta = newType === UserType.Employee ? 1 : -1;
+      company.changeNumberOfEmployees(delta);
+
+      return;
+    }
 
     this.email = newEmail;
     this.type = newType;
-
-    if (this.type === newType) {
-      const delta = newType === UserType.Employee ? 1 : -1;
-
-      return numberOfEmployees + delta;
-    }
-
-    return numberOfEmployees;
   }
 }
 
