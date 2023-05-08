@@ -1,6 +1,7 @@
+import CompanyFactory from './CompanyFactory';
 import Database from './Database';
 import MessageBus from './MessageBus';
-import User from './User';
+import UserFactory from './UserFactory';
 
 class UserController {
   constructor(
@@ -13,19 +14,15 @@ class UserController {
     if (data === null) {
       return;
     }
-    const { mail, type } = data;
 
-    const user = new User(userId, mail, type);
+    const user = UserFactory.create(data);
 
-    const { companyDomainName, numberOfEmployees } = this.database.getCompany();
+    const companyData = this.database.getCompany();
+    const company = CompanyFactory.create(companyData);
 
-    const newNumberOfEmployees = user.changeEmail(
-      newEmail,
-      companyDomainName,
-      numberOfEmployees,
-    );
+    user.changeEmail(newEmail, company);
 
-    this.database.saveCompany(newNumberOfEmployees);
+    this.database.saveCompany(company);
 
     this.database.saveUser(user);
     this.messageBus.sendEmailChangedMessage(userId, newEmail);

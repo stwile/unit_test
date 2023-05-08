@@ -1,5 +1,6 @@
 import { UserType } from './UserType';
 
+import type Company from './Company';
 import type User from './User';
 
 type UserEntity = {
@@ -32,8 +33,8 @@ class Database {
     numberOfEmployees: 3,
   });
 
-  saveCompany = (newNumber: number): void => {
-    console.log(newNumber);
+  saveCompany = (company: Company): void => {
+    console.log(company);
   };
 
   saveUser = (user: User): void => {
